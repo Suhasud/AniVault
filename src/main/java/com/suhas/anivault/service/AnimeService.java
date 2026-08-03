@@ -13,11 +13,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import com.suhas.anivault.specification.AnimeSpecification;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 @Service
 public class AnimeService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AnimeService.class);
 
     private final AnimeRepository animeRepository;
     private final AnimeMapper animeMapper;
@@ -31,9 +35,13 @@ public class AnimeService {
 
     public AnimeResponseDTO addAnime(AnimeRequestDTO requestDTO) {
 
+        logger.info("Adding anime with title: {}", requestDTO.getTitle());
+
         Anime anime = animeMapper.toEntity(requestDTO);
 
         Anime savedAnime = animeRepository.save(anime);
+
+        logger.info("Anime added successfully with id: {}", savedAnime.getId());
 
         return animeMapper.toResponseDTO(savedAnime);
     }
@@ -44,6 +52,11 @@ public class AnimeService {
             AnimeStatus animeStatus,
             WatchStatus watchStatus,
             Pageable pageable) {
+
+        logger.info(
+                "Fetching anime with filters - title: {}, genre: {}, studio: {}, animeStatus: {}, watchStatus: {}",
+                title, genre, studio, animeStatus, watchStatus
+        );
 
         Specification<Anime> specification = Specification.allOf();
 
@@ -78,21 +91,32 @@ public class AnimeService {
 
         }
 
-        return animeRepository.findAll(specification, pageable)
+        Page<AnimeResponseDTO> result = animeRepository
+                .findAll(specification, pageable)
                 .map(animeMapper::toResponseDTO);
+
+        logger.info("Retrieved {} anime", result.getNumberOfElements());
+
+        return result;
     }
 
 
     public AnimeResponseDTO getAnimeById(Long id) {
 
+        logger.info("Fetching anime with id: {}", id);
+
         Anime anime = animeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Anime not found with id: " + id));
+
+        logger.info("Anime found: {}", anime.getTitle());
 
         return animeMapper.toResponseDTO(anime);
     }
 
     public AnimeResponseDTO updateAnime(Long id, AnimeRequestDTO requestDTO) {
+
+        logger.info("Updating anime with id: {}", id);
 
         Anime existingAnime = animeRepository.findById(id)
                 .orElseThrow(() ->
@@ -102,15 +126,21 @@ public class AnimeService {
 
         Anime updatedAnime = animeRepository.save(existingAnime);
 
+        logger.info("Anime updated successfully with id: {}", updatedAnime.getId());
+
         return animeMapper.toResponseDTO(updatedAnime);
     }
 
     public void deleteAnime(Long id) {
+
+        logger.info("Deleting anime with id: {}", id);
 
         Anime existingAnime = animeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Anime not found with id: " + id));
 
         animeRepository.delete(existingAnime);
+
+        logger.info("Anime deleted successfully with id: {}", id);
     }
 }
