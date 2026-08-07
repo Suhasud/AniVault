@@ -20,6 +20,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springdoc.core.annotations.ParameterObject;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +31,7 @@ import java.util.Optional;
         name = "Anime Management API",
         description = "APIs for managing anime in the AniVault application"
 )
+@SecurityRequirement(name = "bearerAuth")
 public class AnimeController {
 
     private final AnimeService animeService;

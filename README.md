@@ -34,6 +34,8 @@ AniVault is a production-style Spring Boot REST API for managing an anime watchl
 - Lombok
 - Maven
 - Swagger / OpenAPI
+- Spring Security
+- JWT (jjwt)
 
 ---
 

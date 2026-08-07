@@ -2,6 +2,7 @@ package com.suhas.anivault.controller;
 
 import com.suhas.anivault.dto.RegisterRequestDTO;
 import com.suhas.anivault.service.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,10 @@ public class AuthController {
     }
 
     @PostMapping("/register")
+    @Operation(
+            summary = "Register User",
+            description = "Public endpoint to register a new user."
+    )
     public ResponseEntity<String> register(
             @Valid @RequestBody RegisterRequestDTO requestDTO) {
 
@@ -32,6 +37,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    @Operation(
+            summary = "Login User",
+            description = "Public endpoint that authenticates the user and returns a JWT token."
+    )
     public ResponseEntity<LoginResponseDTO> login(
             @Valid @RequestBody LoginRequestDTO requestDTO) {
 
