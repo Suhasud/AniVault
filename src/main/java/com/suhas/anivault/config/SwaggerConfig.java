@@ -6,6 +6,7 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -26,6 +27,12 @@ public class SwaggerConfig {
                         .contact(new Contact()
                                 .name("Suhas U D")
                                 .email("example@email.com")))
+
+                .servers(java.util.List.of(
+                        new Server()
+                                .url("https://anivault-production-74a7.up.railway.app")
+                                .description("Production Server")
+                ))
 
                 .externalDocs(new ExternalDocumentation()
                         .description("AniVault Documentation"))
