@@ -47,7 +47,8 @@ public class SecurityConfig {
 
         configuration.setAllowedOrigins(
                 List.of("http://localhost:3000",
-                        "https://anivault-production-74a7.up.railway.app")
+                        "https://anivault-production-74a7.up.railway.app",
+                        "https://vivacious-mercy-production-59f1.up.railway.app")
         );
 
         configuration.setAllowedMethods(
