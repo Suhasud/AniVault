@@ -19,6 +19,8 @@ public class Anime {
     @NotBlank(message = "Studio cannot be blank")
     private String studio;
 
+    private String imageUrl;
+
     @Min(value = 1, message = "Episodes must be at least 1")
     private int episodes;
     @Min(value = 0, message = "Watched episodes cannot be negative")
@@ -42,7 +44,8 @@ public class Anime {
 
     public Anime(String title, Set<String> genres, String studio,
                  int episodes, int watchedEpisodes,
-                 AnimeStatus animeStatus, WatchStatus watchStatus) {
+                 AnimeStatus animeStatus, WatchStatus watchStatus,
+                 String imageUrl) {
         this.title = title;
         this.genres = genres;
         this.studio = studio;
@@ -50,6 +53,7 @@ public class Anime {
         this.watchedEpisodes = watchedEpisodes;
         this.animeStatus = animeStatus;
         this.watchStatus = watchStatus;
+        this.imageUrl = imageUrl;
     }
 
     public String getTitle() {
@@ -114,6 +118,14 @@ public class Anime {
 
     public void setWatchStatus(WatchStatus watchStatus) {
         this.watchStatus = watchStatus;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
 

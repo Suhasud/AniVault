@@ -16,10 +16,12 @@ public class AnimeResponseDTO {
     private AnimeStatus animeStatus;
     private WatchStatus watchStatus;
 
+    private String imageUrl;
+
     public AnimeResponseDTO() {
     }
 
-    public AnimeResponseDTO(AnimeStatus animeStatus, int episodes, Set<String> genres, Long id, String studio, String title, int watchedEpisodes, WatchStatus watchStatus) {
+    public AnimeResponseDTO(AnimeStatus animeStatus, int episodes, Set<String> genres, Long id, String studio, String title, int watchedEpisodes, WatchStatus watchStatus,String imageUrl) {
         this.animeStatus = animeStatus;
         this.episodes = episodes;
         this.genres = genres;
@@ -28,6 +30,7 @@ public class AnimeResponseDTO {
         this.title = title;
         this.watchedEpisodes = watchedEpisodes;
         this.watchStatus = watchStatus;
+        this.imageUrl = imageUrl;
     }
 
     public AnimeStatus getAnimeStatus() {
@@ -92,5 +95,13 @@ public class AnimeResponseDTO {
 
     public void setWatchStatus(WatchStatus watchStatus) {
         this.watchStatus = watchStatus;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

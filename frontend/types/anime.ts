@@ -18,4 +18,5 @@ export interface AnimeRequest {
 
 export interface AnimeResponse extends AnimeRequest {
     id: number;
+    imageUrl: string | null;
 }

@@ -25,12 +25,15 @@ public class AnimeService {
 
     private final AnimeRepository animeRepository;
     private final AnimeMapper animeMapper;
+    private final AniListService aniListService;
 
     public AnimeService(AnimeRepository animeRepository,
-                        AnimeMapper animeMapper) {
+                        AnimeMapper animeMapper,
+                        AniListService aniListService) {
 
         this.animeRepository = animeRepository;
         this.animeMapper = animeMapper;
+        this.aniListService = aniListService;
     }
 
     public AnimeResponseDTO addAnime(AnimeRequestDTO requestDTO) {
@@ -38,6 +41,10 @@ public class AnimeService {
         logger.info("Adding anime with title: {}", requestDTO.getTitle());
 
         Anime anime = animeMapper.toEntity(requestDTO);
+
+        String imageUrl =
+                aniListService.findPosterUrl(requestDTO.getTitle());
+        anime.setImageUrl(imageUrl);
 
         Anime savedAnime = animeRepository.save(anime);
 

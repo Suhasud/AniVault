@@ -28,7 +28,7 @@ export default function LoginPage() {
 
             setToken(response.token);
 
-            router.push("/anime");
+            router.push("/dashboard");
         } catch (error) {
             console.error("Login failed:", error);
             setError("Invalid username or password.");

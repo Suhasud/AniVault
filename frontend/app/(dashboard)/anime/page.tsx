@@ -281,46 +281,62 @@ export default function AnimePage() {
                         return (
                             <article
                                 key={anime.id}
-                                className="overflow-hidden rounded-xl border border-gray-800 bg-gray-900 transition hover:-translate-y-1 hover:border-gray-700"
+                                className="group overflow-hidden rounded-2xl border border-gray-800 bg-gray-900 shadow-lg transition duration-300 hover:-translate-y-1 hover:border-purple-500/50 hover:shadow-purple-950/20"
                             >
-                                {/* Poster Placeholder */}
-                                <div className="flex h-40 items-center justify-center bg-gray-800">
-                  <span className="text-5xl">
-                    🎬
-                  </span>
+                                {/* Poster */}
+                                <div className="relative h-72 w-full overflow-hidden bg-gray-800">
+                                    {anime.imageUrl ? (
+                                        <img
+                                            src={anime.imageUrl}
+                                            alt={`${anime.title} poster`}
+                                            className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                                        />
+                                    ) : (
+                                        <div className="flex h-full items-center justify-center">
+                                            <span className="text-5xl">🎬</span>
+                                        </div>
+                                    )}
+
+                                    {/* Poster overlay */}
+                                    <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-gray-900 to-transparent" />
                                 </div>
 
                                 <div className="p-5">
                                     {/* Title */}
-                                    <h2 className="truncate text-lg font-semibold">
+                                    <h2
+                                        className="truncate text-lg font-semibold text-white"
+                                        title={anime.title}
+                                    >
                                         {anime.title}
                                     </h2>
 
                                     {/* Studio */}
-                                    <p className="mt-1 text-sm text-gray-400">
+                                    <p className="mt-1 truncate text-sm text-gray-400">
                                         {anime.studio}
                                     </p>
 
                                     {/* Genres */}
-                                    <p className="mt-1 truncate text-sm text-gray-500">
-                                        {anime.genres.join(", ")}
+                                    <p
+                                        className="mt-2 truncate text-sm text-gray-500"
+                                        title={anime.genres.join(", ")}
+                                    >
+                                        {anime.genres.join(" • ")}
                                     </p>
 
                                     {/* Episode Progress */}
-                                    <div className="mt-4 flex justify-between text-sm text-gray-400">
-                    <span>
-                      {anime.watchedEpisodes}/
-                        {anime.episodes} episodes
-                    </span>
+                                    <div className="mt-5 flex items-center justify-between text-sm">
+            <span className="text-gray-400">
+                {anime.watchedEpisodes}/{anime.episodes} episodes
+            </span>
 
-                                        <span>
-                      {safeProgress}%
-                    </span>
+                                        <span className="font-medium text-purple-400">
+                {safeProgress}%
+            </span>
                                     </div>
 
                                     <div className="mt-2 h-2 overflow-hidden rounded-full bg-gray-800">
                                         <div
-                                            className="h-full rounded-full bg-purple-600"
+                                            className="h-full rounded-full bg-purple-600 transition-all duration-500"
                                             style={{
                                                 width: `${safeProgress}%`,
                                             }}
@@ -328,37 +344,31 @@ export default function AnimePage() {
                                     </div>
 
                                     {/* Status */}
-                                    <div className="mt-4 flex flex-wrap gap-2">
-                    <span className="rounded-full bg-gray-800 px-3 py-1 text-xs font-medium text-gray-300">
-                      {anime.watchStatus}
-                    </span>
+                                    <div className="mt-5 flex flex-wrap gap-2">
+            <span className="rounded-full bg-purple-500/10 px-3 py-1 text-xs font-medium text-purple-400">
+                {anime.watchStatus}
+            </span>
 
-                                        <span className="rounded-full bg-gray-800 px-3 py-1 text-xs font-medium text-gray-300">
-                      {anime.animeStatus}
-                    </span>
+                                        <span className="rounded-full bg-gray-800 px-3 py-1 text-xs font-medium text-gray-400">
+                {anime.animeStatus}
+            </span>
                                     </div>
 
                                     {/* Actions */}
                                     <div className="mt-5 flex gap-2">
                                         <button
                                             onClick={() =>
-                                                router.push(
-                                                    `/anime/${anime.id}/edit`,
-                                                )
+                                                router.push(`/anime/${anime.id}/edit`)
                                             }
-                                            className="flex-1 rounded-lg border border-gray-700 px-4 py-2 text-sm text-gray-300 transition hover:bg-gray-800 hover:text-white"
+                                            className="flex-1 rounded-lg border border-gray-700 px-4 py-2 text-sm font-medium text-gray-300 transition hover:border-purple-500 hover:bg-purple-500/10 hover:text-white"
                                         >
                                             Edit
                                         </button>
 
                                         <button
-                                            onClick={() =>
-                                                handleDelete(anime.id)
-                                            }
-                                            disabled={
-                                                deletingId === anime.id
-                                            }
-                                            className="flex-1 rounded-lg border border-red-900 px-4 py-2 text-sm text-red-400 transition hover:bg-red-950 disabled:cursor-not-allowed disabled:opacity-50"
+                                            onClick={() => handleDelete(anime.id)}
+                                            disabled={deletingId === anime.id}
+                                            className="flex-1 rounded-lg border border-red-900/70 px-4 py-2 text-sm font-medium text-red-400 transition hover:bg-red-950 disabled:cursor-not-allowed disabled:opacity-50"
                                         >
                                             {deletingId === anime.id
                                                 ? "Deleting..."

@@ -9,6 +9,7 @@ export interface Anime {
     watchedEpisodes: number;
     animeStatus: "ONGOING" | "COMPLETED" | "UPCOMING";
     watchStatus: "PLANNING" | "WATCHING" | "COMPLETED" | "DROPPED";
+    imageUrl: string | null;
 }
 
 export interface AnimePage {
