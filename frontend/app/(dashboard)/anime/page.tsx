@@ -74,9 +74,8 @@ export default function AnimePage() {
             await refetch();
         } catch (error) {
             console.error("Failed to delete anime:", error);
-
             window.alert(
-                "Failed to delete anime. Make sure you have admin access.",
+                "Failed to delete anime. Please try again.",
             );
         } finally {
             setDeletingId(null);

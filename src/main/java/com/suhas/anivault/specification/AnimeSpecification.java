@@ -46,6 +46,7 @@ public final class AnimeSpecification {
                         watchStatus
                 );
     }
+
     public static Specification<Anime> hasGenre(String genre) {
 
         return (root, query, criteriaBuilder) -> {
@@ -56,7 +57,15 @@ public final class AnimeSpecification {
                     criteriaBuilder.lower(genres),
                     genre.toLowerCase()
             );
-
         };
+    }
+
+    public static Specification<Anime> hasUser(Long userId) {
+
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(
+                        root.get("user").get("id"),
+                        userId
+                );
     }
 }

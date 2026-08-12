@@ -25,6 +25,13 @@ export default function Home() {
                     >
                         Sign In
                     </Link>
+
+                    <Link
+                        href="/register"
+                        className="rounded-lg border border-gray-700 px-6 py-3 font-semibold text-gray-300 transition hover:border-purple-500 hover:bg-gray-900 hover:text-white"
+                    >
+                        Create Account
+                    </Link>
                 </div>
 
                 <div className="mt-16 grid grid-cols-1 gap-6 text-left sm:grid-cols-3">

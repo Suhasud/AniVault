@@ -83,7 +83,7 @@ export default function NewAnimePage() {
         } catch (error) {
             console.error("Failed to create anime:", error);
             setError(
-                "Failed to create anime. Make sure you have admin access.",
+                "Failed to create anime. Try again",
             );
         } finally {
             setLoading(false);

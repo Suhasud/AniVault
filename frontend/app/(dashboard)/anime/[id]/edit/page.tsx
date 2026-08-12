@@ -44,7 +44,9 @@ export default function EditAnimePage() {
                 });
             } catch (error) {
                 console.error("Failed to load anime:", error);
-                setError("Failed to load anime.");
+                setError(
+                    "Failed to update anime. Please try again.",
+                );
             } finally {
                 setLoading(false);
             }
