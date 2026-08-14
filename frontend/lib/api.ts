@@ -11,10 +11,16 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
     if (typeof window !== "undefined") {
-        const token = localStorage.getItem("anivault_token");
+        const isAuthRequest =
+            config.url === "/auth/login" ||
+            config.url === "/auth/register";
 
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
+        if (!isAuthRequest) {
+            const token = localStorage.getItem("anivault_token");
+
+            if (token) {
+                config.headers.Authorization = `Bearer ${token}`;
+            }
         }
     }
 
