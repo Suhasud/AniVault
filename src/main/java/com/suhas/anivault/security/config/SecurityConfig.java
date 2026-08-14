@@ -50,7 +50,7 @@ public class SecurityConfig {
                 List.of(
                         "http://localhost:3000",
                         "https://anivault-production-74a7.up.railway.app",
-                        "https://vivacious-mercy-production-59f1.up.railway.app"
+                        "vivacious-mercy-production-316c.up.railway.app"
                 )
         );
 
