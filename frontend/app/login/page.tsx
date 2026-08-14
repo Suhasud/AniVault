@@ -2,11 +2,13 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import { authService } from "@/services/auth.service";
 import { useAuthStore } from "@/store/auth.store";
 
 export default function LoginPage() {
     const router = useRouter();
+    const queryClient = useQueryClient();
     const setToken = useAuthStore((state) => state.setToken);
 
     const [username, setUsername] = useState("");
@@ -26,6 +28,7 @@ export default function LoginPage() {
                 password,
             });
 
+            queryClient.clear();
             setToken(response.token);
 
             router.push("/dashboard");
@@ -103,6 +106,7 @@ export default function LoginPage() {
                         {loading ? "Signing in..." : "Sign In"}
                     </button>
                 </form>
+
                 <div className="mt-6 text-center text-sm text-gray-400">
                     Don't have an account?{" "}
                     <a

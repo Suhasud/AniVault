@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/auth.store";
 
 export default function Navbar() {
     const router = useRouter();
+    const queryClient = useQueryClient();
     const clearToken = useAuthStore((state) => state.clearToken);
 
     const [username, setUsername] = useState<string | null>(null);
@@ -33,6 +35,7 @@ export default function Navbar() {
 
     const handleLogout = () => {
         clearToken();
+        queryClient.clear();
         router.push("/login");
     };
 

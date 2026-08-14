@@ -6,8 +6,16 @@ interface AuthState {
     clearToken: () => void;
 }
 
+const getStoredToken = (): string | null => {
+    if (typeof window === "undefined") {
+        return null;
+    }
+
+    return localStorage.getItem("anivault_token");
+};
+
 export const useAuthStore = create<AuthState>((set) => ({
-    token: null,
+    token: getStoredToken(),
 
     setToken: (token) => {
         localStorage.setItem("anivault_token", token);

@@ -2,13 +2,17 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import {
     animeService,
     AnimeRequest,
 } from "@/services/anime.service";
+import { useAuthStore } from "@/store/auth.store";
 
 export default function NewAnimePage() {
     const router = useRouter();
+    const queryClient = useQueryClient();
+    const token = useAuthStore((state) => state.token);
 
     const [form, setForm] = useState<AnimeRequest>({
         title: "",
@@ -78,6 +82,14 @@ export default function NewAnimePage() {
 
         try {
             await animeService.create(form);
+
+            await queryClient.invalidateQueries({
+                queryKey: ["anime", token],
+            });
+
+            await queryClient.invalidateQueries({
+                queryKey: ["dashboard-anime", token],
+            });
 
             router.push("/anime");
         } catch (error) {

@@ -2,11 +2,17 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
+import {
+    useQuery,
+    useQueryClient,
+} from "@tanstack/react-query";
 import { animeService } from "@/services/anime.service";
+import { useAuthStore } from "@/store/auth.store";
 
 export default function AnimePage() {
     const router = useRouter();
+    const token = useAuthStore((state) => state.token);
+    const queryClient = useQueryClient();
 
     const [title, setTitle] = useState("");
     const [studio, setStudio] = useState("");
@@ -27,10 +33,10 @@ export default function AnimePage() {
         isLoading,
         isError,
         isFetching,
-        refetch,
     } = useQuery({
         queryKey: [
             "anime",
+            token,
             title,
             studio,
             genre,
@@ -51,6 +57,8 @@ export default function AnimePage() {
                 size,
                 sort,
             }),
+
+        enabled: !!token,
     });
 
     const resetPage = () => {
@@ -71,11 +79,18 @@ export default function AnimePage() {
 
             await animeService.delete(id);
 
-            await refetch();
+            await queryClient.invalidateQueries({
+                queryKey: ["anime", token],
+            });
+
+            await queryClient.invalidateQueries({
+                queryKey: ["dashboard-anime", token],
+            });
         } catch (error) {
             console.error("Failed to delete anime:", error);
+
             window.alert(
-                "Failed to delete anime. Please try again.",
+                "Failed to delete anime. Make sure you have admin access.",
             );
         } finally {
             setDeletingId(null);
@@ -292,31 +307,26 @@ export default function AnimePage() {
                                         />
                                     ) : (
                                         <div className="flex h-full items-center justify-center">
-                                            <span className="text-5xl">🎬</span>
+                                            <span className="text-gray-500">
+                                                No Image
+                                            </span>
                                         </div>
                                     )}
-
-                                    {/* Poster overlay */}
-                                    <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-gray-900 to-transparent" />
                                 </div>
 
+                                {/* Content */}
                                 <div className="p-5">
-                                    {/* Title */}
-                                    <h2
-                                        className="truncate text-lg font-semibold text-white"
-                                        title={anime.title}
-                                    >
+                                    <h2 className="truncate text-lg font-semibold text-white">
                                         {anime.title}
                                     </h2>
 
-                                    {/* Studio */}
-                                    <p className="mt-1 truncate text-sm text-gray-400">
+                                    <p className="mt-1 text-sm text-gray-400">
                                         {anime.studio}
                                     </p>
 
                                     {/* Genres */}
                                     <p
-                                        className="mt-2 truncate text-sm text-gray-500"
+                                        className="mt-3 truncate text-xs text-gray-500"
                                         title={anime.genres.join(", ")}
                                     >
                                         {anime.genres.join(" • ")}
@@ -324,13 +334,13 @@ export default function AnimePage() {
 
                                     {/* Episode Progress */}
                                     <div className="mt-5 flex items-center justify-between text-sm">
-            <span className="text-gray-400">
-                {anime.watchedEpisodes}/{anime.episodes} episodes
-            </span>
+                                        <span className="text-gray-400">
+                                            {anime.watchedEpisodes}/{anime.episodes} episodes
+                                        </span>
 
                                         <span className="font-medium text-purple-400">
-                {safeProgress}%
-            </span>
+                                            {safeProgress}%
+                                        </span>
                                     </div>
 
                                     <div className="mt-2 h-2 overflow-hidden rounded-full bg-gray-800">
@@ -344,13 +354,13 @@ export default function AnimePage() {
 
                                     {/* Status */}
                                     <div className="mt-5 flex flex-wrap gap-2">
-            <span className="rounded-full bg-purple-500/10 px-3 py-1 text-xs font-medium text-purple-400">
-                {anime.watchStatus}
-            </span>
+                                        <span className="rounded-full bg-purple-500/10 px-3 py-1 text-xs font-medium text-purple-400">
+                                            {anime.watchStatus}
+                                        </span>
 
                                         <span className="rounded-full bg-gray-800 px-3 py-1 text-xs font-medium text-gray-400">
-                {anime.animeStatus}
-            </span>
+                                            {anime.animeStatus}
+                                        </span>
                                     </div>
 
                                     {/* Actions */}
@@ -394,9 +404,9 @@ export default function AnimePage() {
                 </button>
 
                 <span className="text-sm text-gray-400">
-          Page {page + 1} of{" "}
+                    Page {page + 1} of{" "}
                     {data?.totalPages ?? 1}
-        </span>
+                </span>
 
                 <button
                     disabled={

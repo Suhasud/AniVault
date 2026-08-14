@@ -1,16 +1,21 @@
 "use client";
+"use client";
 
 import { useQuery } from "@tanstack/react-query";
 import { animeService } from "@/services/anime.service";
+import { useAuthStore } from "@/store/auth.store";
 
 export default function DashboardPage() {
+    const token = useAuthStore((state) => state.token);
+
     const { data, isLoading, isError } = useQuery({
-        queryKey: ["dashboard-anime"],
+        queryKey: ["dashboard-anime", token],
         queryFn: () =>
             animeService.getAll({
                 page: 0,
                 size: 100,
             }),
+        enabled: !!token,
     });
 
     if (isLoading) {

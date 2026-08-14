@@ -1,7 +1,9 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+    baseURL:
+        process.env.NEXT_PUBLIC_API_BASE_URL ||
+        "http://localhost:8080",
     headers: {
         "Content-Type": "application/json",
     },
@@ -18,5 +20,20 @@ api.interceptors.request.use((config) => {
 
     return config;
 });
+
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (
+            typeof window !== "undefined" &&
+            error.response?.status === 401
+        ) {
+            localStorage.removeItem("anivault_token");
+            window.location.replace("/login");
+        }
+
+        return Promise.reject(error);
+    },
+);
 
 export default api;

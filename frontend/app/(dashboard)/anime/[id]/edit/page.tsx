@@ -2,14 +2,18 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import {
     animeService,
     AnimeRequest,
 } from "@/services/anime.service";
+import { useAuthStore } from "@/store/auth.store";
 
 export default function EditAnimePage() {
     const params = useParams();
     const router = useRouter();
+    const queryClient = useQueryClient();
+    const token = useAuthStore((state) => state.token);
 
     const id = Number(params.id);
 
@@ -106,6 +110,14 @@ export default function EditAnimePage() {
 
         try {
             await animeService.update(id, form);
+
+            await queryClient.invalidateQueries({
+                queryKey: ["anime", token],
+            });
+
+            await queryClient.invalidateQueries({
+                queryKey: ["dashboard-anime", token],
+            });
 
             router.push("/anime");
         } catch (error) {
