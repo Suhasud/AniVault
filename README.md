@@ -1,36 +1,100 @@
 # 🎌 AniVault
 
-AniVault is a production-style Spring Boot REST API for managing an anime watchlist. It provides secure CRUD operations, advanced search capabilities, JWT-based authentication, role-based authorization, and comprehensive API documentation. The project follows industry-standard backend architecture and best practices.
+AniVault is a full-stack anime watchlist application built with Spring Boot and Next.js.
+
+It allows users to securely manage their personal anime watchlists, track viewing progress, search and filter anime, and manage their accounts using JWT-based authentication and role-based authorization.
+
+The application follows a layered backend architecture and is deployed with a production MySQL database.
 
 ---
 
-# 🚀 Features
+## 🚀 Features
 
-- ✅ CRUD Operations
-- ✅ DTO Pattern
-- ✅ Entity ↔ DTO Mapping using MapStruct
-- ✅ Input Validation
-- ✅ Global Exception Handling
-- ✅ Pagination
-- ✅ Sorting
-- ✅ Dynamic Filtering using Spring Data JPA Specifications
-- ✅ Logging
-- ✅ Unit Testing
-- ✅ Spring Security
-- ✅ JWT Authentication
-- ✅ Role-Based Authorization (Admin/User)
-- ✅ Swagger / OpenAPI Documentation
-- ✅ Docker
-- ✅ Docker Compose
+### 🔐 Authentication & Security
+
+- User registration
+- User login
+- JWT-based authentication
+- BCrypt password hashing
+- Role-based authorization
+- Protected API endpoints
+- User-specific anime watchlists
+- Server-side anime ownership validation
+- Stateless authentication using Spring Security
+- CORS configuration for frontend/backend communication
+
+### 🎬 Anime Management
+
+- Create anime
+- View anime
+- View anime by ID
+- Update anime
+- Delete anime
+- Track watched episodes
+- Track anime status
+- Track watch status
+- Anime cover images
+
+### 🔎 Search & Filtering
+
+- Search by anime title
+- Filter by studio
+- Filter by genre
+- Filter by watch status
+- Filter by anime status
+- Combine multiple filters
+- Pagination
+- Sorting
+- Dynamic filtering using Spring Data JPA Specifications
+
+### 📊 Dashboard
+
+- Anime collection statistics
+- Watch progress information
+- Watchlist overview
+- Recently managed anime
+
+### 🎨 Frontend
+
+- Responsive desktop and mobile interface
+- Anime cards
+- Dashboard
+- Protected application pages
+- Login and registration pages
+- Loading states
+- Empty states
+- Error handling
+- Responsive layouts for different screen sizes
+
+### 🛠️ Backend
+
+- RESTful API architecture
+- DTO pattern
+- Entity ↔ DTO mapping using MapStruct
+- Input validation
+- Global exception handling
+- Logging
+- Unit testing
+- Swagger / OpenAPI documentation
+
+### 🚀 Deployment
+
+- Docker
+- Docker Compose
+- Railway deployment
+- Production MySQL database
+- Separate frontend and backend deployment
 
 ---
 
 # 🛠️ Tech Stack
 
+## Backend
+
 - Java 25
 - Spring Boot 4.1
 - Spring Security
-- JWT (jjwt)
+- JWT (JJWT)
 - Spring Data JPA
 - Hibernate
 - MySQL 8
@@ -38,134 +102,281 @@ AniVault is a production-style Spring Boot REST API for managing an anime watchl
 - Lombok
 - Maven
 - Swagger / OpenAPI
-- Docker
-- Docker Compose
 - JUnit 5
 - Mockito
+
+## Frontend
+
+- Next.js 16
+- React
+- TypeScript
+- Tailwind CSS
+- Axios
+- TanStack React Query
+- Zustand
+
+## DevOps & Deployment
+
+- Docker
+- Docker Compose
+- Railway
+- Git
+- GitHub
 
 ---
 
 # 🏗️ Architecture
 
-AniVault follows a layered architecture:
+AniVault follows a layered backend architecture:
 
 ```text
-Controller
-    ↓
-Service
-    ↓
-Repository
-    ↓
-MySQL Database
+                    Next.js Frontend
+                           │
+                           │ REST API
+                           ▼
+                    Spring Boot Backend
+                           │
+             ┌─────────────┼─────────────┐
+             │             │             │
+             ▼             ▼             ▼
+        Controller      Security       Exception
+             │          + JWT          Handling
+             ▼
+          Service
+             │
+      ┌──────┴──────┐
+      │             │
+      ▼             ▼
+   Mapper      Specification
+  MapStruct         │
+      │             │
+      └──────┬──────┘
+             ▼
+        Repository
+             │
+             ▼
+        MySQL Database
 ```
 
-Supporting layers:
+---
 
-- DTO
-- Mapper (MapStruct)
-- Specification
-- Security
-- Exception Handling
-- Logging
-- Configuration
+# 👤 User-Specific Watchlists
+
+Each user has their own anime watchlist.
+
+```text
+User A
+ ├── One Piece
+ ├── Naruto
+ └── Death Note
+
+User B
+ ├── Bleach
+ ├── Demon Slayer
+ └── Solo Leveling
+```
+
+Anime ownership is enforced by the backend using the authenticated user from the JWT.
+
+The frontend does not provide a user ID to determine ownership.
+
+The backend identifies the authenticated user and associates anime records with that user.
+
+This prevents users from accessing, modifying, or deleting anime belonging to another user.
+
+---
+
+# 🔐 Authentication Flow
+
+```text
+User
+ │
+ ▼
+Login
+ │
+ ▼
+Spring Security
+ │
+ ▼
+AuthenticationManager
+ │
+ ▼
+JWT Generation
+ │
+ ▼
+Frontend stores JWT
+ │
+ ▼
+Axios sends JWT with requests
+ │
+ ▼
+JwtAuthenticationFilter
+ │
+ ▼
+Authenticated User
+ │
+ ▼
+Protected API
+```
 
 ---
 
 # 📂 Project Structure
 
 ```text
-src
-├── main
-│   ├── java
-│   │   └── com
-│   │       └── suhas
-│   │           └── anivault
-│   │               ├── config
-│   │               ├── controller
-│   │               ├── dto
-│   │               ├── entity
-│   │               ├── enums
-│   │               ├── exception
-│   │               ├── mapper
-│   │               ├── repository
-│   │               ├── security
-│   │               │   ├── config
-│   │               │   ├── jwt
-│   │               │   └── service
-│   │               ├── service
-│   │               ├── specification
-│   │               └── AnivaultApplication
-│   └── resources
-│       ├── application.properties
-│       ├── static
-│       └── templates
+AniVault/
 │
-└── test
-    └── java
-        └── com
-            └── suhas
-                └── anivault
-                    ├── controller
-                    ├── service
-                    └── AnivaultApplicationTests
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/
+│   │   │       └── suhas/
+│   │   │           └── anivault/
+│   │   │               ├── config/
+│   │   │               ├── controller/
+│   │   │               ├── dto/
+│   │   │               ├── entity/
+│   │   │               ├── enums/
+│   │   │               ├── exception/
+│   │   │               ├── mapper/
+│   │   │               ├── repository/
+│   │   │               ├── security/
+│   │   │               │   ├── config/
+│   │   │               │   ├── jwt/
+│   │   │               │   └── service/
+│   │   │               ├── service/
+│   │   │               ├── specification/
+│   │   │               └── AnivaultApplication.java
+│   │   │
+│   │   └── resources/
+│   │       ├── application.properties
+│   │       ├── static/
+│   │       └── templates/
+│   │
+│   └── test/
+│       └── java/
+│           └── com/
+│               └── suhas/
+│                   └── anivault/
+│
+├── frontend/
+│   ├── app/
+│   ├── lib/
+│   ├── services/
+│   ├── store/
+│   ├── types/
+│   ├── package.json
+│   └── next.config.ts
+│
+├── Dockerfile
+├── docker-compose.yml
+├── pom.xml
+├── anime_db.sql
+├── README.md
+└── LICENSE
 ```
 
 ---
 
-# 📌 API Features
+# 📌 API Endpoints
 
 ## 🔐 Authentication
 
-- Register User
-- Login
-- JWT Token Generation
-- Protected APIs using JWT
-- Role-Based Authorization
+### Register
 
-## 🎬 Anime Management
+```http
+POST /auth/register
+```
 
-- Create Anime
-- Get Anime by ID
-- Update Anime
-- Delete Anime
+### Login
 
-## 🔍 Dynamic Filtering
+```http
+POST /auth/login
+```
 
-Examples:
+The login endpoint returns a JWT token that is used to access protected endpoints.
+
+---
+
+## 🎬 Anime
+
+### Get Anime
+
+```http
+GET /anime
+```
+
+### Get Anime by ID
+
+```http
+GET /anime/{id}
+```
+
+### Create Anime
+
+```http
+POST /anime
+```
+
+### Update Anime
+
+```http
+PUT /anime/{id}
+```
+
+### Delete Anime
+
+```http
+DELETE /anime/{id}
+```
+
+---
+
+# 🔎 Filtering
+
+### Search by title
 
 ```http
 GET /anime?title=One Piece
 ```
 
+### Filter by studio
+
 ```http
 GET /anime?studio=MAPPA
 ```
+
+### Filter by genre
 
 ```http
 GET /anime?genre=Action
 ```
 
+### Filter by watch status
+
 ```http
 GET /anime?watchStatus=WATCHING
 ```
+
+### Filter by anime status
 
 ```http
 GET /anime?animeStatus=ONGOING
 ```
 
-## 📄 Pagination
+### Pagination
 
 ```http
 GET /anime?page=0&size=5
 ```
 
-## ↕️ Sorting
+### Sorting
 
 ```http
 GET /anime?sort=title,asc
 ```
 
-## 🔎 Combined Query
+### Combined query
 
 ```http
 GET /anime?studio=MAPPA&genre=Action&page=0&size=5&sort=title,asc
@@ -175,23 +386,59 @@ GET /anime?studio=MAPPA&genre=Action&page=0&size=5&sort=title,asc
 
 # 📖 API Documentation
 
-Swagger UI is available after starting the application:
+Swagger / OpenAPI documentation is available when the backend is running.
+
+Local:
 
 ```text
-http://localhost:8080/swagger-ui.html
+http://localhost:8080/swagger-ui/index.html
+```
+
+Production:
+
+```text
+https://anivault-production-74a7.up.railway.app/swagger-ui/index.html
 ```
 
 ---
 
-# ▶️ Running the Project
+# 🌐 Live Application
 
-## Clone the repository
+Frontend:
+
+```text
+https://vivacious-mercy-production-316c.up.railway.app
+```
+
+Backend:
+
+```text
+https://anivault-production-74a7.up.railway.app
+```
+
+---
+
+# ▶️ Running Locally
+
+## Prerequisites
+
+Install the following:
+
+* Java 25
+* MySQL 8
+* Node.js
+* npm
+* Docker (optional)
+
+---
+
+## 1. Clone the Repository
 
 ```bash
 git clone https://github.com/Suhasud/AniVault.git
 ```
 
-## Navigate to the project
+Navigate into the project:
 
 ```bash
 cd AniVault
@@ -199,61 +446,196 @@ cd AniVault
 
 ---
 
-## Option 1: Run with Docker (Recommended)
+# 🖥️ 2. Run the Backend
 
-```bash
-docker compose up --build
-```
-
-Application:
-
-```text
-http://localhost:8080
-```
-
-Swagger UI:
-
-```text
-http://localhost:8080/swagger-ui.html
-```
-
----
-
-## Option 2: Run Locally
-
-### Configure MySQL
-
-Update the database configuration in:
+Configure the MySQL connection in:
 
 ```text
 src/main/resources/application.properties
 ```
 
-### Start the application
+Then start the Spring Boot application:
 
 ```bash
 ./mvnw spring-boot:run
 ```
 
+Backend:
+
+```text
+http://localhost:8080
+```
+
+Swagger:
+
+```text
+http://localhost:8080/swagger-ui/index.html
+```
+
 ---
 
-# ✅ Completed Features
+# 🌐 3. Run the Frontend
 
-- CRUD APIs
-- DTO Pattern
-- Validation
-- Global Exception Handling
-- Pagination
-- Sorting
-- Dynamic Filtering (JPA Specifications)
-- Logging
-- Unit Testing
-- Spring Security
-- JWT Authentication
-- Role-Based Authorization
-- Swagger / OpenAPI
-- Docker
-- Docker Compose
+Open another terminal:
+
+```bash
+cd frontend
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Create:
+
+```text
+.env.local
+```
+
+Add:
+
+```env
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
+```
+
+Start the frontend:
+
+```bash
+npm run dev
+```
+
+Frontend:
+
+```text
+http://localhost:3000
+```
+
+---
+
+# 🐳 Running with Docker
+
+From the project root:
+
+```bash
+docker compose up --build
+```
+
+The backend will be available at:
+
+```text
+http://localhost:8080
+```
+
+---
+
+# 🗄️ Database
+
+AniVault uses MySQL with Spring Data JPA and Hibernate.
+
+The main relationship between users and anime is:
+
+```text
+User
+ │
+ │ 1
+ │
+ │ *
+ ▼
+Anime
+```
+
+Each anime record is associated with an authenticated user.
+
+---
+
+# 🧪 Testing
+
+The backend uses:
+
+* JUnit 5
+* Mockito
+
+The application has been tested for:
+
+* User registration
+* User login
+* JWT authentication
+* Role-based authorization
+* User-specific anime access
+* Anime creation
+* Anime retrieval
+* Anime updates
+* Anime deletion
+* Search and filtering
+* Pagination
+* Desktop frontend
+* Mobile frontend
+* Production API communication
+
+---
+
+# 🚀 Deployment
+
+AniVault is deployed using Railway.
+
+Production architecture:
+
+```text
+                    User
+                     │
+                     ▼
+             Railway Frontend
+                Next.js
+                     │
+                     │ REST API
+                     ▼
+             Railway Backend
+               Spring Boot
+                     │
+                     ▼
+              Railway MySQL
+```
+
+Docker is used for containerization and deployment configuration.
+
+---
+
+# 🖼️ Anime Images
+
+AniVault stores an image URL for anime cover artwork.
+
+The current application uses externally hosted AniList CDN image URLs for anime artwork.
+
+AniList is used as an image source only; AniVault's core functionality does not depend on the AniList API.
+
+---
+
+# 🔒 Security
+
+AniVault implements:
+
+* Spring Security
+* JWT authentication
+* BCrypt password hashing
+* Stateless sessions
+* Role-based authorization
+* User-specific data ownership
+* Server-side ownership validation
+* Input validation
+* CORS configuration
+* Protected REST endpoints
+
+Ownership checks are performed on the backend rather than relying on data supplied by the frontend.
+
+---
+
+# 📄 License
+
+This project is licensed under the MIT License.
+
+See the [LICENSE](LICENSE) file for details.
 
 ---
 
@@ -261,10 +643,6 @@ src/main/resources/application.properties
 
 **Suhas U D**
 
-GitHub: https://github.com/Suhasud
+GitHub:
 
----
-
-# 📄 License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+[https://github.com/Suhasud](https://github.com/Suhasud)
